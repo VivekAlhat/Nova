@@ -1,6 +1,8 @@
 package lexer
 
-import "github.com/VivekAlhat/Nova/token"
+import (
+	"github.com/VivekAlhat/Nova/token"
+)
 
 type Lexer struct {
 	input        string
@@ -33,8 +35,24 @@ func (l *Lexer) readIdentifier() string {
 	return l.input[position:l.currPosition]
 }
 
+func (l *Lexer) readNumber() string {
+	position := l.currPosition
+	for isDigit(l.ch) {
+		l.readChar()
+	}
+	return l.input[position:l.currPosition]
+}
+
+func (l *Lexer) ignoreWhitespace() {
+	for l.ch == ' ' || l.ch == '\n' || l.ch == '\t' || l.ch == '\r' {
+		l.readChar()
+	}
+}
+
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
+
+	l.ignoreWhitespace()
 
 	switch l.ch {
 	case '=':
@@ -59,7 +77,11 @@ func (l *Lexer) NextToken() token.Token {
 	default:
 		if isLetter(l.ch) {
 			tok.Literal = l.readIdentifier()
-			// identify token type?
+			tok.Type = token.CheckIdentifier(tok.Literal)
+			return tok
+		} else if isDigit(l.ch) {
+			tok.Literal = l.readNumber()
+			tok.Type = token.INT
 			return tok
 		} else {
 			tok = newToken(token.ILLEGAL, l.ch)
@@ -76,4 +98,8 @@ func newToken(tokType token.TokenType, tokValue byte) token.Token {
 
 func isLetter(ch byte) bool {
 	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
+}
+
+func isDigit(ch byte) bool {
+	return '0' <= ch && ch <= '9'
 }

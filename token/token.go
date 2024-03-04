@@ -4,7 +4,7 @@ const (
 	ILLEGAL = "ILLEGAL"
 	EOF     = "EOF"
 
-	// identifiers + literals
+	// identifiers
 	IDENTIFIER = "IDENTIFIER"
 	INT        = "INT"
 
@@ -30,4 +30,16 @@ type TokenType string
 type Token struct {
 	Type    TokenType
 	Literal string
+}
+
+var keywords = map[string]TokenType{
+	"fn":  FUNCTION,
+	"def": DEF,
+}
+
+func CheckIdentifier(identifier string) TokenType {
+	if tok, ok := keywords[identifier]; ok {
+		return tok
+	}
+	return IDENTIFIER
 }
