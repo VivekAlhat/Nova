@@ -11,6 +11,12 @@ const (
 	// operators
 	ASSIGNMENT = "="
 	PLUS       = "+"
+	MINUS      = "-"
+	BANG       = "!"
+	ASTERISK   = "*"
+	SLASH      = "/"
+	LT         = "<"
+	GT         = ">"
 
 	// delimeters
 	COMMA     = ","
@@ -23,6 +29,11 @@ const (
 	// keywords
 	DEF      = "DEF"
 	FUNCTION = "FUNCTION"
+	TRUE     = "TRUE"
+	FALSE    = "FALSE"
+	IF       = "IF"
+	ELSE     = "ELSE"
+	RETURN   = "RETURN"
 )
 
 type TokenType string
@@ -33,8 +44,13 @@ type Token struct {
 }
 
 var keywords = map[string]TokenType{
-	"fn":  FUNCTION,
-	"def": DEF,
+	"fn":     FUNCTION,
+	"def":    DEF,
+	"true":   TRUE,
+	"false":  FALSE,
+	"if":     IF,
+	"else":   ELSE,
+	"return": RETURN,
 }
 
 func CheckIdentifier(identifier string) TokenType {
